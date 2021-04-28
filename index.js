@@ -17,20 +17,20 @@ program
             throw new Error(`Could not find the file ${name}`);
         }
 
+        let proc;
+        const start = debounce(() => {
+        if (proc) {
+            proc.kill();
+        };
+        proc = spawn('node', [name], { stdio: 'inherit' });
+        }, 100);
 
+        chokidar
+            .watch('.')
+            .on('all', start)
+            .on('change', start)
+            .on('unlinked', start);
 
-const start = debounce(() => {
-    spawn('node', [name], { stdio: 'inherit' });
-}, 100);
-
-chokidar
-    .watch('.')
-    .on('all', start)
-    .on('change', start)
-    .on('unlinked', start);
-
-    
 });
-
 
 program.parse(process.argv);
