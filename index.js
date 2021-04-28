@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 
-const chokidar = require('chokidar');
 const debounce = require('lodash.debounce');
+const chokidar = require('chokidar');
 const program = require('caporal');
 const fs = require('fs');
 const { spawn } = require('child_process');
+const chalk = require('chalk');
+
 program
     .version('0.0.1')
     .argument('[filename]', 'Name of a file to execute')
@@ -21,9 +23,11 @@ program
         const start = debounce(() => {
         if (proc) {
             proc.kill();
+
         };
+        console.log(chalk.blue.bold('>>>>>>>>>>>> Starting process...'));
         proc = spawn('node', [name], { stdio: 'inherit' });
-        }, 100);
+        }, 200);
 
         chokidar
             .watch('.')
