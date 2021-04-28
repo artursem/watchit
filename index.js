@@ -4,7 +4,7 @@ const chokidar = require('chokidar');
 const debounce = require('lodash.debounce');
 const program = require('caporal');
 const fs = require('fs');
-
+const { spawn } = require('child_process');
 program
     .version('0.0.1')
     .argument('[filename]', 'Name of a file to execute')
@@ -17,13 +17,10 @@ program
             throw new Error(`Could not find the file ${name}`);
         }
 
-        console.log(args);
-    });
 
-program.parse(process.argv);
 
 const start = debounce(() => {
-    console.log('STARTING USER\'S PROGRAM');
+    spawn('node', [name], { stdio: 'inherit' });
 }, 100);
 
 chokidar
@@ -31,3 +28,9 @@ chokidar
     .on('all', start)
     .on('change', start)
     .on('unlinked', start);
+
+    
+});
+
+
+program.parse(process.argv);
